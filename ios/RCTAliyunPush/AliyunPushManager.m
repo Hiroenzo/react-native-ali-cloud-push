@@ -118,9 +118,7 @@ RCT_EXPORT_METHOD(getApplicationIconBadgeNumber:(RCTResponseSenderBlock)callback
 /**
  * 同步BadgeNumber至服务端
  */
-RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger) num
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger)num resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK syncBadgeNum:num withCallback:^(CloudPushCallbackResult *res){
         if(res.success)
@@ -137,8 +135,7 @@ RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger) num
 /**
  * 获取DeviceID
  */
-RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSString *deviceId = [CloudPushSDK getDeviceId];
     if(deviceId!=Nil)
@@ -166,9 +163,7 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve
 /**
  * 绑定账号
  */
-RCT_EXPORT_METHOD(bindAccount:(NSString *)account
-                    resolver:(RCTPromiseResolveBlock)resolve
-                    rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(bindAccount:(NSString *)account resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK bindAccount:account withCallback:^(CloudPushCallbackResult *res) {
         if(res.success)
@@ -185,8 +180,7 @@ RCT_EXPORT_METHOD(bindAccount:(NSString *)account
 /**
  * 解绑账号
  */
-RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve
-                       rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK unbindAccount:^(CloudPushCallbackResult *res) {
         if(res.success)
@@ -203,11 +197,7 @@ RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve
 /**
  * 绑定标签
  */
-RCT_EXPORT_METHOD(bindTag:(int)target
-                  withTags:(NSArray *)tags
-                  withAlias:(NSString *)alias
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(bindTag:(int)target withTags:(NSArray *)tags withAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK bindTag:target
                  withTags:tags
@@ -228,16 +218,9 @@ RCT_EXPORT_METHOD(bindTag:(int)target
 /**
  * 解绑标签
  */
-RCT_EXPORT_METHOD(unbindTag:(int)target
-                  withTags:(NSArray *)tags
-                  withAlias:(NSString *)alias
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(unbindTag:(int)target withTags:(NSArray *)tags withAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK unbindTag:target
-                   withTags:tags
-                  withAlias:alias
-               withCallback:^(CloudPushCallbackResult *res)
+    [CloudPushSDK unbindTag:target withTags:tags withAlias:alias withCallback:^(CloudPushCallbackResult *res)
      {
         if(res.success)
         {
@@ -253,12 +236,9 @@ RCT_EXPORT_METHOD(unbindTag:(int)target
 /**
  * 获取标签列表
  */
-RCT_EXPORT_METHOD(listTags:(int)target
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(listTags:(int)target resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK listTags:target
-              withCallback:^(CloudPushCallbackResult *res)
+    [CloudPushSDK listTags:target withCallback:^(CloudPushCallbackResult *res)
      {
           if(res.success)
           {
@@ -274,9 +254,7 @@ RCT_EXPORT_METHOD(listTags:(int)target
 /**
  * 添加别名
  */
-RCT_EXPORT_METHOD(addAlias:(NSString *)alias
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(addAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK addAlias:alias withCallback:^(CloudPushCallbackResult *res)
      {
@@ -294,9 +272,7 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)alias
 /**
  * 删除别名
  */
-RCT_EXPORT_METHOD(removeAlias:(NSString *)alias
-                  resolver:(RCTPromiseResolveBlock)resolve
-                  rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(removeAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK removeAlias:alias withCallback:^(CloudPushCallbackResult *res)
      {
@@ -314,8 +290,7 @@ RCT_EXPORT_METHOD(removeAlias:(NSString *)alias
 /**
  * 获取别名列表
  */
-RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
-                     rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK listAliases:^(CloudPushCallbackResult *res)
      {
