@@ -10,50 +10,7 @@
 #### 目前已完成Android12的匹配升级，升级到阿里云EMAS的SDK 3.7.4版本
 #### 注意EMAS SDK 3.7.4 的Android配置发生了变化，[具体参考](https://github.com/evan0204/react-native-aliyun-emas/issues/1)
 
-<details>
-  <summary>修改履历</summary> 
-v1.1.0
-
-1. 完成Android12的匹配
-2. 更新阿里云EMAS SDK版本至3.7.4
-
-v1.0.22
-
-1. 修正alicloud-android-utdid Android编译错误
-2. 更新阿里云移动推送SDK
-
-v1.0.21
-
-1. 修正android编译配置
-
-v1.0.20
-
-1. 升级阿里云移动推送sdk ios v1.9.9
-
-
-v1.0.19
-
-1. 更新了第三方辅助通道SDK至3.0.9
-2. 升级阿里云移动推送sdk android v3.1.6
-3. 更新Android buildTools版本至28.0.3
-
-v1.0.18
-
-1. 更新了第三方辅助通道SDK至3.0.6，支持了OPPO
-
-v1.0.17
-1. add AliyunPush.removeAllListeners()
-2. 修复MIUIUtils类中isMIUI方法android 8.0以上异常
-
-v1.0.16
-1. 修复ios低版本收到通知后闪退问题
-
-v1.0.15
-1. 增加getInitialMessage方法
-2. add sample
-
-[[more]](https://github.com/evan0204/react-native-ali-cloud-push/releases)
-</details>
+#### iOS SDK已更新至 1.9.9.7
 
 ## 前提
 使用本组件前提是注册过阿里云移动推送服务，注册过app并取得了appKey及appSecret, 如果要使用ios版还要向苹果公司申请证书并配置好阿里云上的设置。
