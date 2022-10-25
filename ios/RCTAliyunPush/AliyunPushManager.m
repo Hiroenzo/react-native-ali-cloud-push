@@ -17,7 +17,6 @@
 // iOS 10 notification
 #import <UserNotifications/UserNotifications.h>
 
-
 #ifndef __OPTIMIZE__
 // only output log when debug
 #define DLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
@@ -28,11 +27,8 @@
 // output log both debug and release
 #define ALog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 
-
 NSString *const ALIYUN_PUSH_TYPE_MESSAGE = @"message";
 NSString *const ALIYUN_PUSH_TYPE_NOTIFICATION = @"notification";
-
-
 
 @interface AliyunPushManager () <UNUserNotificationCenterDelegate>
 @end
@@ -42,15 +38,17 @@ NSString *const ALIYUN_PUSH_TYPE_NOTIFICATION = @"notification";
     bool hasListeners;
 }
 
-
 static AliyunPushManager * sharedInstance = nil;
 
-+ (BOOL)requiresMainQueueSetup {
++ (BOOL)requiresMainQueueSetup
+{
     return YES;
 }
 
 #pragma mark singleton instance method
-+ (id)allocWithZone:(NSZone *)zone {
+
++ (id)allocWithZone:(NSZone *)zone
+{
     static AliyunPushManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -59,7 +57,9 @@ static AliyunPushManager * sharedInstance = nil;
     return sharedInstance;
 }
 
-//copy返回单例本身
+/**
+ * copy返回单例本身
+ */
 - (id)copyWithZone:(NSZone *)zone
 {
     return self;
@@ -68,7 +68,8 @@ static AliyunPushManager * sharedInstance = nil;
 - (instancetype)init
 {
     
-    if (!(self = [super init])) {
+    if(!(self = [super init]))
+    {
         DLog(@"init AliyunPushManager error");
     }
     sharedInstance = self;
@@ -76,11 +77,15 @@ static AliyunPushManager * sharedInstance = nil;
     
 }
 
-//获取单例
+/**
+ * 获取单例
+ */
 + (AliyunPushManager *)sharedInstance
 {
-    @synchronized(self) {
-        if (sharedInstance == nil){
+    @synchronized(self)
+    {
+        if(sharedInstance == nil)
+        {
             sharedInstance = [[self alloc] init];
         }
     }
@@ -91,8 +96,9 @@ static AliyunPushManager * sharedInstance = nil;
 RCT_EXPORT_MODULE(AliyunPush);
 
 #pragma mark React Native Method
+
 /**
- * Update the application icon badge number on the home screen
+ * 设置BadgeNumber
  */
 RCT_EXPORT_METHOD(setApplicationIconBadgeNumber:(NSInteger)number)
 {
@@ -102,7 +108,7 @@ RCT_EXPORT_METHOD(setApplicationIconBadgeNumber:(NSInteger)number)
 }
 
 /**
- * Get the current application icon badge number on the home screen
+ * 获取BadgeNumber
  */
 RCT_EXPORT_METHOD(getApplicationIconBadgeNumber:(RCTResponseSenderBlock)callback)
 {
@@ -110,38 +116,47 @@ RCT_EXPORT_METHOD(getApplicationIconBadgeNumber:(RCTResponseSenderBlock)callback
 }
 
 /**
- * sync badge number to the server
+ * 同步BadgeNumber至服务端
  */
 RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger) num
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK syncBadgeNum:num withCallback:^(CloudPushCallbackResult *res){
-        if (res.success) {
+        if(res.success)
+        {
             resolve(@"");
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
 }
 
 /**
- * Get the aliyun push device id
+ * 获取DeviceID
  */
 RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
     NSString *deviceId = [CloudPushSDK getDeviceId];
-    if (deviceId!=Nil) {
+    if(deviceId!=Nil)
+    {
         resolve(deviceId);
-    } else {
+    }
+    else
+    {
         // 或许还没有初始化完成，等3秒钟再次尝试
         [NSThread sleepForTimeInterval:3.0f];
 
         deviceId = [CloudPushSDK getDeviceId];
-        if (deviceId!=Nil) {
+        if(deviceId!=Nil)
+        {
             resolve(deviceId);
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"getDeviceId() failed."], nil, RCTErrorWithMessage(@"getDeviceId() failed."));
         }
 
@@ -149,39 +164,45 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve
 }
 
 /**
- * bind account to cloud sdk
+ * 绑定账号
  */
 RCT_EXPORT_METHOD(bindAccount:(NSString *)account
                     resolver:(RCTPromiseResolveBlock)resolve
                     rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK bindAccount:account withCallback:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+        if(res.success)
+        {
             resolve(@"");
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
 }
 
 /**
- * unbind account from cloud sdk
+ * 解绑账号
  */
-
 RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve
                        rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK unbindAccount:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+        if(res.success)
+        {
             resolve(@"");
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
 }
 
 /**
- * bind tags to cloud sdk */
+ * 绑定标签
+ */
 RCT_EXPORT_METHOD(bindTag:(int)target
                   withTags:(NSArray *)tags
                   withAlias:(NSString *)alias
@@ -191,19 +212,22 @@ RCT_EXPORT_METHOD(bindTag:(int)target
     [CloudPushSDK bindTag:target
                  withTags:tags
                 withAlias:alias
-             withCallback:^(CloudPushCallbackResult *res) {
-                 if (res.success) {
-                     resolve(@"");
-                 } else {
-                     reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
-                 }
-             }];
+             withCallback:^(CloudPushCallbackResult *res)
+     {
+         if(res.success)
+         {
+             resolve(@"");
+         }
+         else
+         {
+             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
+         }
+     }];
 }
 
 /**
- * list tags from cloud sdk
+ * 解绑标签
  */
-
 RCT_EXPORT_METHOD(unbindTag:(int)target
                   withTags:(NSArray *)tags
                   withAlias:(NSString *)alias
@@ -213,77 +237,94 @@ RCT_EXPORT_METHOD(unbindTag:(int)target
     [CloudPushSDK unbindTag:target
                    withTags:tags
                   withAlias:alias
-               withCallback:^(CloudPushCallbackResult *res) {
-                   if (res.success) {
-                       resolve(@"");
-                   } else {
-                       reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
-                   }
-               }];
+               withCallback:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
+           resolve(@"");
+        }
+        else
+        {
+           reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
+        }
+    }];
 }
 
 /**
- * list tags of target
+ * 获取标签列表
  */
-
 RCT_EXPORT_METHOD(listTags:(int)target
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
     [CloudPushSDK listTags:target
-              withCallback:^(CloudPushCallbackResult *res) {
-                  if (res.success) {
-                      resolve(res.data);
-                  } else {
-                      reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
-                  }
-             }];
+              withCallback:^(CloudPushCallbackResult *res)
+     {
+          if(res.success)
+          {
+              resolve(res.data);
+          }
+          else
+          {
+              reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
+          }
+     }];
 }
 
 /**
- * add alias to cloud sdk
+ * 添加别名
  */
 RCT_EXPORT_METHOD(addAlias:(NSString *)alias
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK addAlias:alias withCallback:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+    [CloudPushSDK addAlias:alias withCallback:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
             resolve(@"");
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
 }
 
 /**
- * remove alias from cloud sdk
+ * 删除别名
  */
-
 RCT_EXPORT_METHOD(removeAlias:(NSString *)alias
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK removeAlias:alias withCallback:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+    [CloudPushSDK removeAlias:alias withCallback:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
             resolve(@"");
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
 }
 
 /**
- * list aliases of target
+ * 获取别名列表
  */
-
 RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
                      rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK listAliases:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+    [CloudPushSDK listAliases:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
             resolve(res.data);
-        } else {
+        }
+        else
+        {
             reject([NSString stringWithFormat:@"%ld",(long)res.error.code], res.error.localizedDescription,res.error);
         }
     }];
@@ -295,21 +336,29 @@ RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve
 RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 {
     float systemVersionNum = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersionNum >= 10.0) {
+    if(systemVersionNum >= 10.0)
+    {
         UNUserNotificationCenter *_notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
-        [_notificationCenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            if (settings.authorizationStatus == UNAuthorizationStatusAuthorized) {
+        [_notificationCenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings)
+         {
+            if(settings.authorizationStatus == UNAuthorizationStatusAuthorized)
+            {
                 callback(@[@(TRUE)]);
-            } else {
+            }
+            else
+            {
                 callback(@[@(FALSE)]);
             }
         }];
-    } else {
+    }
+    else
+    {
         callback(@[@(TRUE)]);
     }
 }
 
 #pragma mark
+
 - (NSArray<NSString *> *)supportedEvents
 {
     return @[@"aliyunPushReceived"];
@@ -318,16 +367,14 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 #pragma mark
 
 /**
- set parames for aliyun sdk
- 
- @param appKey aliyun push appKey
- @param appSecret aliyun push appSecret
- @param launchOptions app launch Options
- @param createNotificationCategoryHandler callback for create user's customized notification category
+ * 设置参数
+ * @param appKey aliyun push appKey
+ * @param appSecret aliyun push appSecret
+ * @param launchOptions app launch Options
+ * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
 - (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler
 {
-    
     // APNs注册，获取deviceToken并上报
     [self registerAPNs:createNotificationCategoryHandler];
     
@@ -342,26 +389,29 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
     [CloudPushSDK sendNotificationAck:launchOptions];
-    
 }
 
-/*
- *  APNs注册成功回调，将返回的deviceToken上传到CloudPush服务器
+/**
+ * APNs注册成功回调，将返回的deviceToken上传到CloudPush服务器
  */
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     DLog(@"Upload deviceToken to CloudPush server.");
-    [CloudPushSDK registerDevice:deviceToken withCallback:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+    [CloudPushSDK registerDevice:deviceToken withCallback:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
             DLog(@"Register deviceToken success, deviceToken: %@", [CloudPushSDK getApnsDeviceToken]);
-        } else {
+        }
+        else
+        {
             DLog(@"Register deviceToken failed, error: %@", res.error);
         }
     }];
 }
 
-/*
- *  APNs注册失败回调
+/**
+ * APNs注册失败回调
  */
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
@@ -374,75 +424,78 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 }
 
 #pragma mark APNs Register
+
 /**
  *	向APNs注册，获取deviceToken用于推送
- *
  */
 - (void)registerAPNs:(void (^)(void))createNotificationCategoryHandler
 {
     float systemVersionNum = [[[UIDevice currentDevice] systemVersion] floatValue];
-    if (systemVersionNum >= 10.0) {
-        
+    if(systemVersionNum >= 10.0)
+    {
         // iOS 10 notifications
         UNUserNotificationCenter *_notificationCenter = [UNUserNotificationCenter currentNotificationCenter];
         // 创建category，并注册到通知中心
-        if (createNotificationCategoryHandler) {
+        if(createNotificationCategoryHandler)
+        {
             createNotificationCategoryHandler();
         }
 
-        
         _notificationCenter.delegate = sharedInstance;
         // 请求推送权限
-        [_notificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error) {
-            if (granted) {
+        [_notificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert | UNAuthorizationOptionBadge | UNAuthorizationOptionSound completionHandler:^(BOOL granted, NSError * _Nullable error)
+         {
+            if(granted)
+            {
                 // granted
                 DLog(@"User authored notification.");
                 dispatch_async(dispatch_get_main_queue(), ^{
                     // 向APNs注册，获取deviceToken
                     [[UIApplication sharedApplication] registerForRemoteNotifications];
                 });
-                
-            } else {
+            }
+            else
+            {
                 // not granted
                 DLog(@"User denied notification.");
             }
         }];
-    } else if (systemVersionNum >= 8.0) {
+    }
+    else if(systemVersionNum >= 8.0)
+    {
         // iOS 8 Notifications
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored"-Wdeprecated-declarations"
         [[UIApplication sharedApplication] registerUserNotificationSettings:
          [UIUserNotificationSettings settingsForTypes:
           (UIUserNotificationTypeSound | UIUserNotificationTypeAlert | UIUserNotificationTypeBadge)
                                            categories:nil]];
         [[UIApplication sharedApplication] registerForRemoteNotifications];
-#pragma clang diagnostic pop
-    } else {
+    }
+    else
+    {
         // iOS < 8 Notifications
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored"-Wdeprecated-declarations"
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
          (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound)];
-#pragma clang diagnostic pop
     }
 }
 
 #pragma mark SDK Init
 - (void)initCloudPush:(NSString *)appKey appSecret:(NSString *)appSecret
 {
-    
     // 正式上线建议关闭
     //[CloudPushSDK turnOnDebug];
     
     // SDK初始化
-    [CloudPushSDK asyncInit:appKey appSecret:appSecret callback:^(CloudPushCallbackResult *res) {
-        if (res.success) {
+    [CloudPushSDK asyncInit:appKey appSecret:appSecret callback:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
             DLog(@"Push SDK init success, deviceId: %@.", [CloudPushSDK getDeviceId]);
-        } else {
+        }
+        else
+        {
             DLog(@"Push SDK init failed, error: %@", res.error);
         }
     }];
-    
 }
 
 /**
@@ -451,7 +504,6 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
     DLog(@"Receive a notification in foregound.");
-    
     
     UNNotificationRequest *request = notification.request;
     UNNotificationContent *content = request.content;
@@ -487,16 +539,15 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     // 通知打开回执上报
     [CloudPushSDK sendNotificationAck:userInfo];    
     
-    if ([content.body isEqualToString:@""]){
-        
+    if([content.body isEqualToString:@""])
+    {
         // 通知不弹出
         completionHandler(UNNotificationPresentationOptionNone);
-        
-    } else {
-    
+    }
+    else
+    {
         // 通知弹出，且带有声音、内容和角标
         completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert | UNNotificationPresentationOptionBadge);
-        
     }
 }
 
@@ -535,22 +586,20 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
     
-    if ([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
-        
+    if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier])
+    {
         // 用户动作
         notificationDict[@"actionIdentifier"] = @"opened";
-        
-    } else if([response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier]) {
-        
+    }
+    else if([response.actionIdentifier isEqualToString:UNNotificationDismissActionIdentifier])
+    {
         // 用户动作
         notificationDict[@"actionIdentifier"] = @"removed";
-        
-        
-    } else {
-
+    }
+    else
+    {
         // 用户自定义action
         notificationDict[@"actionIdentifier"] =response.actionIdentifier;
-        
     }
     
     // sent to Js
@@ -660,25 +709,27 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     notificationDict[@"title"] = [[NSString alloc] initWithData:message.title encoding:NSUTF8StringEncoding];
     notificationDict[@"body"] = [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding];
     // 取得通知自定义字段内容
-    if (notification.userInfo) {
+    if(notification.userInfo)
+    {
         notificationDict[@"extras"] = notification.userInfo;
-    } else {
+    }
+    else
+    {
         notificationDict[@"extras"] = @{};
     }
-    
     
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALIYUN_PUSH_TYPE_MESSAGE;
     
     [self sendEventToJs:notificationDict];
-    
 }
 
 - (void)sendEventToJs:(NSMutableDictionary*)notification
 {
     DLog(@"sendEventToJs:");
     
-    for (NSString *key in notification) {
+    for(NSString *key in notification)
+    {
         DLog(@"key: %@ value: %@", key, notification[key]);
     }
     
@@ -686,27 +737,33 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
     //修正app退出后，点击通知会闪退bug
     AliyunPushManager* __weak weakSelf = self;
-    if(!hasListeners){
+    if(!hasListeners)
+    {
         initialNotification = notification;
         return;
     }
     dispatch_async(dispatch_get_main_queue(), ^{
         //修正app退出后，点击通知会闪退bug
         if([UIApplication sharedApplication].applicationState == UIApplicationStateActive
-           ||[UIApplication sharedApplication].applicationState == UIApplicationStateInactive) {
+           ||[UIApplication sharedApplication].applicationState == UIApplicationStateInactive)
+        {
             [weakSelf sendEventWithName:@"aliyunPushReceived" body:notification];
         }
     });
 }
 
--(void)startObserving {
+-(void)startObserving
+{
     hasListeners = YES;
     // Set up any upstream listeners or background tasks as necessary
 }
--(void)stopObserving {
+
+-(void)stopObserving
+{
     hasListeners = NO;
     // Remove upstream listeners, stop unnecessary background tasks
 }
+
 //存储初始化的消息
 static NSMutableDictionary * initialNotification = nil;
 
@@ -715,17 +772,26 @@ RCT_EXPORT_METHOD(getInitialMessage:(RCTPromiseResolveBlock)resolve
 {
     resolve(initialNotification);
 }
+
 -(NSString *)getAppState
 {
     UIApplicationState state = [UIApplication sharedApplication].applicationState;
-    if(state == UIApplicationStateActive){
+    if(state == UIApplicationStateActive)
+    {
         return @"active";
-    }else if(state == UIApplicationStateInactive){
+    }
+    else if(state == UIApplicationStateInactive)
+    {
         return @"inactive";
-    }else if(state == UIApplicationStateBackground){
+    }
+    else if(state == UIApplicationStateBackground)
+    {
         return @"background";
-    }else{
+    }
+    else
+    {
         return nil;
     }
 }
+
 @end
