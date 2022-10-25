@@ -1,16 +1,14 @@
-# react-native-aliyun-emas
+# react-native-ali-cloud-push
 [![npm](https://img.shields.io/npm/v/react-native-aliyun-emas.svg?style=flat-square)](https://www.npmjs.com/package/react-native-aliyun-emas)
 
 #### 首先感谢wonday的贡献，[此库是在wonday库的基础上进行升级维护](https://github.com/wonday/react-native-aliyun-push)
 
-#### 为了不造成重名问题，现更名为：react-native-aliyun-emas
+#### 为了不造成重名问题，现更名为：react-native-ali-cloud-push
 
 [阿里云移动推送](https://www.aliyun.com/product/cps?spm=5176.2020520107.0.0.fgXGFp)react-native封装组件
 
 #### 目前已完成Android12的匹配升级，升级到阿里云EMAS的SDK 3.7.4版本
 #### 注意EMAS SDK 3.7.4 的Android配置发生了变化，[具体参考](https://github.com/evan0204/react-native-aliyun-emas/issues/1)
-
-
 
 <details>
   <summary>修改履历</summary> 
@@ -54,7 +52,7 @@ v1.0.15
 1. 增加getInitialMessage方法
 2. add sample
 
-[[more]](https://github.com/evan0204/react-native-aliyun-emas/releases)
+[[more]](https://github.com/evan0204/react-native-ali-cloud-push/releases)
 </details>
 
 ## 前提
