@@ -1,6 +1,6 @@
 {
-    "name": "react-native-aliyun-emas",
-    "version": "1.1.0",
+    "name": "react-native-ali-cloud-push",
+    "version": "1.0.0",
     "description": "react-native EMAS SDK",
     "main": "index.js",
     "scripts": {
@@ -8,7 +8,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/evan0204/react-native-aliyun-emas.git"
+        "url": "git+https://github.com/Hiroenzo/react-native-ali-cloud-push.git"
     },
     "keywords": [
         "react-component",
@@ -23,12 +23,12 @@
         "emas"
     ],
     "author": {
-        "name": "evan0204",
-        "url": "https://github.com/evan020"
+        "name": "Hiroenzo",
+        "url": "https://github.com/Hiroenzo"
     },
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/evan0204/react-native-aliyun-emas/issues"
+        "url": "https://github.com/Hiroenzo/react-native-ali-cloud-push/issues"
     },
     "dependencies": {},
     "peerDependencies": {}
