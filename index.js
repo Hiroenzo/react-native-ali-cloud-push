@@ -32,6 +32,10 @@ function getKey(listener, type){
 
 
 export default class AliCloudPush {
+    static initCloudPush = (params) => {
+        return AliCloudPushNative.initCloudPush(params);
+    }
+
     static getDeviceId = () => {
         return AliCloudPushNative.getDeviceId();
     }

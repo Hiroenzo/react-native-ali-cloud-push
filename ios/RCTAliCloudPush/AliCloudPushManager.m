@@ -329,6 +329,16 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     }
 }
 
+/**
+ *  初始化SDK
+ *  @param options 初始化参数
+ */
+RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+{
+    [self setParams:options[@"autoInit"] appKey:options[@"appKey"] appSecret:options[@"appSecret"] launchOptions:options[@"lauchOptions"] createNotificationCategoryHandler:nil resolver:resolve rejecter:reject];
+     resolve(nil);
+}
+
 #pragma mark
 
 - (NSArray<NSString *> *)supportedEvents
@@ -340,20 +350,28 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 /**
  * 设置参数
- * @param appKey aliCloud push appKey
- * @param appSecret aliCloud push appSecret
+ * @param autoInit 是否开启自动初始化
+ * @param appKey 阿里云推送appKey
+ * @param appSecret 阿里云推送appSecret
  * @param launchOptions app launch Options
  * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
-- (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler
 - (void)setParams:(BOOL)autoInit appKey:(NSString *)appKey appSecret:(NSString *)appSecret launchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject
 {
     // APNs注册，获取deviceToken并上报
     [self registerAPNs:createNotificationCategoryHandler];
-    
-    // 初始化SDK
-    [self initCloudPush:appKey appSecret:appSecret];
-    
+
+    if(autoInit)
+    {
+        // 自动初始化SDK
+        [self autoInitCloudPush];
+    }
+    else
+    {
+        // 手动初始化SDK
+        [self initCloudPush:appKey appSecret:appSecret];
+    }
+
     // 监听推送通道打开动作
     [self listenerOnChannelOpened];
 
@@ -452,6 +470,28 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 }
 
 #pragma mark SDK Init
+
+
+- (void)autoInitCloudPush
+{
+    // 正式上线建议关闭
+    // [CloudPushSDK turnOnDebug];
+
+    // SDK自动初始化
+    [CloudPushSDK autoInit:^(CloudPushCallbackResult *res)
+     {
+        if(res.success)
+        {
+            DLog(@"Push SDK init success, deviceId: %@.", [CloudPushSDK getDeviceId]);
+        }
+        else
+        {
+            DLog(@"Push SDK init failed, error: %@", res.error);
+        }
+    }];
+}
+
+
 - (void)initCloudPush:(NSString *)appKey appSecret:(NSString *)appSecret
 {
     // 正式上线建议关闭
