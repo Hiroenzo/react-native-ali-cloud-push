@@ -335,7 +335,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
  */
 RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [self setParams:options[@"autoInit"] appKey:options[@"appKey"] appSecret:options[@"appSecret"] launchOptions:options[@"lauchOptions"] createNotificationCategoryHandler:nil resolver:resolve rejecter:reject];
+    [self setParams:options[@"autoInit"] appKey:options[@"appKey"] appSecret:options[@"appSecret"] launchOptions:options[@"launchOptions"] createNotificationCategoryHandler:nil resolver:resolve rejecter:reject];
      resolve(nil);
 }
 
