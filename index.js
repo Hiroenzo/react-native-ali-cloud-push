@@ -116,11 +116,11 @@ export default class AliCloudPush {
     }
 
     static addListener = (callback) => {
-        AliCloudPush._addListener(callback,"aliyunPushReceived");
+        AliCloudPush._addListener(callback,"cloudPushReceived");
     };
 
     static removeListener = (callback) => {
-        AliCloudPush._removeListener(callback, "aliyunPushReceived");
+        AliCloudPush._removeListener(callback, "cloudPushReceived");
     };
 
     static removeAllListeners = () => {

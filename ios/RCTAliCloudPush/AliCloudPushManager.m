@@ -67,14 +67,14 @@ static AliCloudPushManager * sharedInstance = nil;
 
 - (instancetype)init
 {
-    
+
     if(!(self = [super init]))
     {
         DLog(@"init AliCloudPushManager error");
     }
     sharedInstance = self;
     return self;
-    
+
 }
 
 /**
@@ -199,10 +199,7 @@ RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
  */
 RCT_EXPORT_METHOD(bindTag:(int)target withTags:(NSArray *)tags withAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
-    [CloudPushSDK bindTag:target
-                 withTags:tags
-                withAlias:alias
-             withCallback:^(CloudPushCallbackResult *res)
+    [CloudPushSDK bindTag:target withTags:tags withAlias:alias withCallback:^(CloudPushCallbackResult *res)
      {
          if(res.success)
          {
@@ -336,7 +333,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"aliCloudPushReceived"];
+    return @[@"cloudPushReceived"];
 }
 
 #pragma mark
@@ -349,6 +346,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
  * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
 - (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler
+- (void)setParams:(BOOL)autoInit appKey:(NSString *)appKey appSecret:(NSString *)appSecret launchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject
 {
     // APNs注册，获取deviceToken并上报
     [self registerAPNs:createNotificationCategoryHandler];
@@ -358,10 +356,10 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     
     // 监听推送通道打开动作
     [self listenerOnChannelOpened];
-    
+
     // 监听推送消息到达
     [self registerMessageReceive];
-    
+
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
     [CloudPushSDK sendNotificationAck:launchOptions];
 }
@@ -395,7 +393,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings
 {
-    
+
 }
 
 #pragma mark APNs Register
@@ -457,8 +455,8 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 - (void)initCloudPush:(NSString *)appKey appSecret:(NSString *)appSecret
 {
     // 正式上线建议关闭
-    //[CloudPushSDK turnOnDebug];
-    
+    // [CloudPushSDK turnOnDebug];
+
     // SDK初始化
     [CloudPushSDK asyncInit:appKey appSecret:appSecret callback:^(CloudPushCallbackResult *res)
      {
@@ -479,41 +477,41 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(UNNotificationPresentationOptions options))completionHandler
 {
     DLog(@"Receive a notification in foregound.");
-    
+
     UNNotificationRequest *request = notification.request;
     UNNotificationContent *content = request.content;
     NSDictionary *userInfo = content.userInfo;
-    
+
     NSMutableDictionary *notificationDict = [NSMutableDictionary dictionaryWithCapacity:5];
-    
+
     // 通知时间
     notificationDict[@"date"] = notification.date;
-    
+
     // 标题
     notificationDict[@"title"] = content.title;
-    
+
     // 副标题
     notificationDict[@"subtitle"] = content.subtitle;
-    
+
     // 内容
     notificationDict[@"body"] = content.body;
-    
+
     // 保存角标并设置
     notificationDict[@"badge"] = content.badge;
     [UIApplication sharedApplication].applicationIconBadgeNumber = [content.badge intValue];
-    
+
     // 取得通知自定义字段内容
     notificationDict[@"extras"] =userInfo;
-    
+
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
-    
+
     // sent to Js
     [self sendEventToJs:notificationDict];
-    
+
     // 通知打开回执上报
-    [CloudPushSDK sendNotificationAck:userInfo];    
-    
+    [CloudPushSDK sendNotificationAck:userInfo];
+
     if([content.body isEqualToString:@""])
     {
         // 通知不弹出
@@ -532,35 +530,35 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler
 {
     DLog(@"Open/delete a notification.");
-    
+
     UNNotificationRequest *request = response.notification.request;
     UNNotificationContent *content = request.content;
     NSDictionary *userInfo = content.userInfo;
-    
+
     NSMutableDictionary *notificationDict = [NSMutableDictionary dictionary];
-    
+
     // 通知时间
     notificationDict[@"date"] = response.notification.date;
-    
+
     // 标题
     notificationDict[@"title"] = content.title;
-    
+
     // 副标题
     notificationDict[@"subtitle"] = content.subtitle;
-    
+
     // 内容
     notificationDict[@"body"] = content.body;
-    
+
     // 角标
     notificationDict[@"badge"] = content.badge;
     [UIApplication sharedApplication].applicationIconBadgeNumber = [content.badge intValue];
-    
+
     // 取得通知自定义字段内容
     notificationDict[@"extras"] = userInfo;
-    
+
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
-    
+
     if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier])
     {
         // 用户动作
@@ -576,13 +574,13 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
         // 用户自定义action
         notificationDict[@"actionIdentifier"] =response.actionIdentifier;
     }
-    
+
     // sent to Js
     [self sendEventToJs:notificationDict];
-    
+
     // 通知打开回执上报
     [CloudPushSDK sendNotificationAck:userInfo];
-    
+
     // 通知不弹出
     completionHandler();
 }
@@ -593,40 +591,40 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
 {
     DLog(@"Open/delete a notification(didReceiveRemoteNotification).");
-    
+
     // 取得APNS通知内容
     NSDictionary *aps = [userInfo valueForKey:@"aps"];
-    
+
     NSMutableDictionary *notificationDict = [NSMutableDictionary dictionary];
-    
+
     // 通知时间，修复：iOS低版本下点击推送闪退的问题（未分配内存就初始化对象）
     notificationDict[@"date"] = [[NSDate alloc] init];
-    
+
     // 标题
     notificationDict[@"title"] = @"";
-    
+
     // 副标题
     notificationDict[@"subtitle"] = @"";
-    
+
     // 内容
     notificationDict[@"body"] = [aps valueForKey:@"alert"];
-    
+
     // 保存角标并设置
     notificationDict[@"badge"] = [aps valueForKey:@"badge"];
     [UIApplication sharedApplication].applicationIconBadgeNumber = [[aps valueForKey:@"badge"] intValue];
-    
+
     // 取得通知自定义字段内容，例：获取key为"Extras"的内容
     notificationDict[@"extras"] =userInfo;
-    
+
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
-    
+
     // sent to Js
     [self sendEventToJs:notificationDict];
-    
+
     // 通知打开回执上报
     [CloudPushSDK sendNotificationAck:userInfo];
-    
+
 
     completionHandler(UIBackgroundFetchResultNewData);
 }
@@ -638,7 +636,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
  */
 - (void)listenerOnChannelOpened
 {
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onChannelOpened:)
                                                  name:@"CCPDidChannelConnectedSuccess"
@@ -647,8 +645,6 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 /**
  *	推送通道打开回调
- *
- *	@param 	notification
  */
 - (void)onChannelOpened:(NSNotification *)notification
 {
@@ -661,7 +657,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
  */
 - (void)registerMessageReceive
 {
-    
+
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(onMessageReceived:)
                                                  name:@"CCPDidReceiveMessageNotification"
@@ -670,17 +666,15 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 /**
  *	处理到来推送消息
- *
- *	@param 	notification
  */
 - (void)onMessageReceived:(NSNotification *)notification
 {
     DLog(@"onMessageReceived.");
-    
+
     NSMutableDictionary *notificationDict = [NSMutableDictionary dictionary];
-    
+
     CCPSysMessage *message = [notification object];
-    
+
     notificationDict[@"title"] = [[NSString alloc] initWithData:message.title encoding:NSUTF8StringEncoding];
     notificationDict[@"body"] = [[NSString alloc] initWithData:message.body encoding:NSUTF8StringEncoding];
     // 取得通知自定义字段内容
@@ -692,22 +686,22 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     {
         notificationDict[@"extras"] = @{};
     }
-    
+
     // 类型 “notification” or "message"
     notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_MESSAGE;
-    
+
     [self sendEventToJs:notificationDict];
 }
 
 - (void)sendEventToJs:(NSMutableDictionary*)notification
 {
     DLog(@"sendEventToJs:");
-    
+
     for(NSString *key in notification)
     {
         DLog(@"key: %@ value: %@", key, notification[key]);
     }
-    
+
     notification[@"appState"] = [self getAppState];
 
     //修正app退出后，点击通知会闪退bug
@@ -722,7 +716,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
         if([UIApplication sharedApplication].applicationState == UIApplicationStateActive
            ||[UIApplication sharedApplication].applicationState == UIApplicationStateInactive)
         {
-            [weakSelf sendEventWithName:@"aliCloudPushReceived" body:notification];
+            [weakSelf sendEventWithName:@"cloudPushReceived" body:notification];
         }
     });
 }

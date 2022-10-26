@@ -61,7 +61,7 @@ public class AliCloudPushMessageReceiver extends MessageReceiver {
         params.putString("title", cPushMessage.getTitle());
         params.putString("type", ALICLOUD_PUSH_TYPE_MESSAGE);
 
-        sendEvent("AliCloudPushReceived", params);
+        sendEvent("cloudPushReceived", params);
     }
 
     @Override
@@ -80,7 +80,7 @@ public class AliCloudPushMessageReceiver extends MessageReceiver {
 
         params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
 
-        sendEvent("AliCloudPushReceived", params);
+        sendEvent("cloudPushReceived", params);
     }
 
     @Override
@@ -95,7 +95,7 @@ public class AliCloudPushMessageReceiver extends MessageReceiver {
         params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
         params.putString("actionIdentifier", "opened");
 
-        sendEvent("AliCloudPushReceived", params);
+        sendEvent("cloudPushReceived", params);
     }
 
     @Override
@@ -123,7 +123,7 @@ public class AliCloudPushMessageReceiver extends MessageReceiver {
         params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
         params.putString("actionIdentifier", "removed");
 
-        sendEvent("AliCloudPushReceived", params);
+        sendEvent("cloudPushReceived", params);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class AliCloudPushMessageReceiver extends MessageReceiver {
 
         params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
 
-        sendEvent("AliCloudPushReceived", params);
+        sendEvent("cloudPushReceived", params);
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {
