@@ -37,7 +37,7 @@ yarn add react-native-ali-cloud-push
 
 示例:
 ```
-AliyunPush.getDeviceId()
+AliCloudPush.getDeviceId()
     .then((deviceId)=>{
         //console.log("deviceId:"+deviceId);
     })
@@ -52,7 +52,7 @@ AliyunPush.getDeviceId()
 
 示例:
 ```
-AliyunPush.bindAccount(account)
+AliCloudPush.bindAccount(account)
     .then((data)=>{
         console.log("bindAccount success");
         console.log(JSON.stringify(data));
@@ -66,7 +66,7 @@ AliyunPush.bindAccount(account)
 
 示例:
 ```
-AliyunPush.unbindAccount()
+AliCloudPush.unbindAccount()
     .then((result)=>{
         console.log("unbindAccount success");
         console.log(JSON.stringify(result));
@@ -85,7 +85,7 @@ AliyunPush.unbindAccount()
 
 示例:
 ```
-AliyunPush.bindTag(1,["testtag1","testtag2"],"")
+AliCloudPush.bindTag(1,["testtag1","testtag2"],"")
     .then((result)=>{
         console.log("bindTag success");
         console.log(JSON.stringify(result));
@@ -104,7 +104,7 @@ AliyunPush.bindTag(1,["testtag1","testtag2"],"")
 
 示例:
 ```
-AliyunPush.unbindTag(1,["testTag1"],"")
+AliCloudPush.unbindTag(1,["testTag1"],"")
     .then((result)=>{
         console.log("unbindTag succcess");
         console.log(JSON.stringify(result));
@@ -121,7 +121,7 @@ AliyunPush.unbindTag(1,["testTag1"],"")
 
 示例:
 ```
-AliyunPush.listTags(1)
+AliCloudPush.listTags(1)
     .then((result)=>{
         console.log("listTags success");
         console.log(JSON.stringify(result));
@@ -138,7 +138,7 @@ AliyunPush.listTags(1)
 
 示例:
 ```
-AliyunPush.addAlias("testAlias")
+AliCloudPush.addAlias("testAlias")
     .then((result)=>{
         console.log("addAlias success");
         console.log(JSON.stringify(result));
@@ -155,7 +155,7 @@ AliyunPush.addAlias("testAlias")
 
 示例:
 ```
-AliyunPush.removeAlias("testAlias")
+AliCloudPush.removeAlias("testAlias")
     .then((result)=>{
         console.log("removeAlias success");
         console.log(JSON.stringify(result));
@@ -169,7 +169,7 @@ AliyunPush.removeAlias("testAlias")
 
 示例:
 ```
-AliyunPush.listAliases()
+AliCloudPush.listAliases()
     .then((result)=>{
         console.log("listAliases success");
         console.log(JSON.stringify(result));
@@ -186,13 +186,13 @@ AliyunPush.listAliases()
 
 示例:
 ```
-AliyunPush.setApplicationIconBadgeNumber(5);
+AliCloudPush.setApplicationIconBadgeNumber(5);
 ```
 **获取桌面图标角标数字** (ios支持，android支持绝大部分手机)
 
 示例:
 ```
-AliyunPush.getApplicationIconBadgeNumber((num)=>{
+AliCloudPush.getApplicationIconBadgeNumber((num)=>{
     console.log("ApplicationIconBadgeNumber:" + num);
 });
 ```
@@ -203,13 +203,13 @@ AliyunPush.getApplicationIconBadgeNumber((num)=>{
 
 示例:
 ```
-AliyunPush.syncBadgeNum(5);
+AliCloudPush.syncBadgeNum(5);
 ```
 **获取用户是否开启通知设定** (ios 10.0+支持)
 
 示例:
 ```
-AliyunPush.getAuthorizationStatus((result)=>{
+AliCloudPush.getAuthorizationStatus((result)=>{
     console.log("AuthorizationStatus:" + result);
 });
 ```
@@ -223,20 +223,20 @@ app在未启动时收到通知后，点击通知启动app,
 示例:
 ```
 // 处理收到的推送
-handleAliyunPushMessage = React.useCallback((e) => {
+handleAliCloudPushMessage = React.useCallback((e) => {
     .....
 }, [])
 
 React.useEffect(() => {
 		// 监听推送事件
-    AliyunPush.addListener(handleAliyunPushMessage);
-    const msg = await AliyunPush.getInitialMessage();
+    AliCloudPush.addListener(handleAliCloudPushMessage);
+    const msg = await AliCloudPush.getInitialMessage();
     if(msg){
-        handleAliyunPushMessage(msg);
+        handleAliCloudPushMessage(msg);
     }
     return () => {
     	// 移除推送监听事件
-    	AliyunPush.removeListener(handleAliyunPushMessage);
+    	AliCloudPush.removeListener(handleAliCloudPushMessage);
     }
-}, [handleAliyunPushMessage])
+}, [handleAliCloudPushMessage])
 ```

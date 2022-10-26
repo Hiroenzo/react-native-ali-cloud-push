@@ -7,23 +7,18 @@
  */
 
 'use strict';
-import React,{ Component } from 'react';
-import {
-    requireNativeComponent,
-    Platform,
-} from 'react-native';
+import React from 'react';
+import {Platform, NativeModules, NativeEventEmitter} from 'react-native';
 
-const AliyunPushNative = require('react-native').NativeModules.AliyunPush;
-const { NativeEventEmitter } = require('react-native');
-const LocalEventEmitter =  new NativeEventEmitter(AliyunPushNative);
+const {AliCloudPush} = NativeModules
+const LocalEventEmitter =  new NativeEventEmitter(AliCloudPush);
 
-var listeners = {};
+let listeners = {};
 
-var id = 0;
-var META = '__listener_id';
+let id = 0;
+const META = '__listener_id';
 
-function getKey(listener,type){
-
+function getKey(listener, type){
     if (!listener.hasOwnProperty(META)){
         if (!Object.isExtensible(listener)) {
             return 'F';
@@ -33,25 +28,23 @@ function getKey(listener,type){
         });
     }
     return listener[META];
+}
 
-};
 
-
-export default class AliyunPush {
-
+export default class AliCloudPush {
     static getDeviceId = () => {
-        return AliyunPushNative.getDeviceId();
+        return AliCloudPush.getDeviceId();
     }
 
     static getInitialMessage = () => {
-        return AliyunPushNative.getInitialMessage().then(e => {
+        return AliCloudPush.getInitialMessage().then(e => {
             if(e && e.extraStr) {
                 let extras = JSON.parse(e.extraStr);
                 if (extras) {
                     if (extras.badge) {
                         let badgeNumber = parseInt(extras.badge);
                         if (!isNaN(badgeNumber)) {
-                            AliyunPush.setApplicationIconBadgeNumber(badgeNumber);
+                            AliCloudPush.setApplicationIconBadgeNumber(badgeNumber);
                         }
                     }
                     e.extras = extras;
@@ -63,52 +56,52 @@ export default class AliyunPush {
     }
 
     static getApplicationIconBadgeNumber = (callback) => {
-        AliyunPushNative.getApplicationIconBadgeNumber(function(args) {
+        AliCloudPush.getApplicationIconBadgeNumber(function(args) {
             callback(args);
         });
     }
 
     static setApplicationIconBadgeNumber = (num) => {
-        AliyunPushNative.setApplicationIconBadgeNumber(num);
+        AliCloudPush.setApplicationIconBadgeNumber(num);
     }
 
     static syncBadgeNum = (num) => {
         if(Platform.OS === 'android') {
             return;
         }
-        AliyunPushNative.syncBadgeNum(num);
+        AliCloudPush.syncBadgeNum(num);
     }
 
     static bindAccount = (account) => {
-        return AliyunPushNative.bindAccount(account);
+        return AliCloudPush.bindAccount(account);
     }
 
     static unbindAccount = () => {
-        return AliyunPushNative.unbindAccount();
+        return AliCloudPush.unbindAccount();
     }
 
     static bindTag = (target, tags, alias) => {
-        return AliyunPushNative.bindTag(target, tags, alias);
+        return AliCloudPush.bindTag(target, tags, alias);
     }
 
     static unbindTag = (target, tags, alias) => {
-        return AliyunPushNative.unbindTag(target, tags, alias);
+        return AliCloudPush.unbindTag(target, tags, alias);
     }
 
     static listTags = (target) => {
-        return AliyunPushNative.listTags(target);
+        return AliCloudPush.listTags(target);
     }
 
     static addAlias = (alias) => {
-        return AliyunPushNative.addAlias(alias);
+        return AliCloudPush.addAlias(alias);
     }
 
     static removeAlias = (alias) => {
-        return AliyunPushNative.removeAlias(alias);
+        return AliCloudPush.removeAlias(alias);
     }
 
     static listAliases = () => {
-        return AliyunPushNative.listAliases();
+        return AliCloudPush.listAliases();
     }
 
     static getAuthorizationStatus = (callback) => {
@@ -116,35 +109,29 @@ export default class AliyunPush {
             // android always return true
             callback(true);
         } else {
-            AliyunPushNative.getAuthorizationStatus(function(args) {
+            AliCloudPush.getAuthorizationStatus(function(args) {
                 callback(args);
             });
         }
     }
 
-
     static addListener = (callback) => {
-
-        AliyunPush._addListener(callback,"aliyunPushReceived");
-
+        AliCloudPush._addListener(callback,"AliCloudPushReceived");
     };
 
     static removeListener = (callback) => {
-
-        AliyunPush._removeListener(callback, "aliyunPushReceived");
-
+        AliCloudPush._removeListener(callback, "AliCloudPushReceived");
     };
 
     static removeAllListeners = () => {
-        for(var key in listeners){
+        for(const key in listeners){
             listeners[key].remove();
             listeners[key] = null;
         }
     };
 
     static _addListener = (callback,type) => {
-
-        var key = getKey(callback,type);
+        const key = getKey(callback,type);
         listeners[key] = LocalEventEmitter.addListener(type,
             (e) => {
                 // convert json string to obj
@@ -154,7 +141,7 @@ export default class AliyunPush {
                         if (extras.badge) {
                             let badgeNumber = parseInt(extras.badge);
                             if (!isNaN(badgeNumber)) {
-                                AliyunPush.setApplicationIconBadgeNumber(badgeNumber);
+                                AliCloudPush.setApplicationIconBadgeNumber(badgeNumber);
                             }
                         }
                         e.extras = extras;
@@ -164,19 +151,15 @@ export default class AliyunPush {
                 } else {
                     callback(e);
                 }
-
             });
-
     };
 
     static _removeListener = (callback,type) => {
-
-        var key = getKey(callback,type);
+        const key = getKey(callback, type);
         if (!listeners[key]) {
             return;
         }
         listeners[key].remove();
         listeners[key] = null;
-
     };
 }

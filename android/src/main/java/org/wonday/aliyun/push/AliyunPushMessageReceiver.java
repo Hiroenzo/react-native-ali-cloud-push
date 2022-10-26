@@ -40,14 +40,14 @@ import com.alibaba.sdk.android.push.MessageReceiver;
 import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
 import com.alibaba.sdk.android.push.notification.CPushMessage;
 
-public class AliyunPushMessageReceiver extends MessageReceiver {
+public class AliCloudPushMessageReceiver extends MessageReceiver {
     public static ReactApplicationContext context;
-    public static AliyunPushMessageReceiver instance;
+    public static AliCloudPushMessageReceiver instance;
 
-    private final String ALIYUN_PUSH_TYPE_MESSAGE = "message";
-    private final String ALIYUN_PUSH_TYPE_NOTIFICATION = "notification";
+    private final String ALICLOUD_PUSH_TYPE_MESSAGE = "message";
+    private final String ALICLOUD_PUSH_TYPE_NOTIFICATION = "notification";
 
-    public AliyunPushMessageReceiver() {
+    public AliCloudPushMessageReceiver() {
         super();
         instance = this;
     }
@@ -59,9 +59,9 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         params.putString("messageId", cPushMessage.getMessageId());
         params.putString("body", cPushMessage.getContent());
         params.putString("title", cPushMessage.getTitle());
-        params.putString("type", ALIYUN_PUSH_TYPE_MESSAGE);
+        params.putString("type", ALICLOUD_PUSH_TYPE_MESSAGE);
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudPushReceived", params);
     }
 
     @Override
@@ -78,9 +78,9 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         }
         params.putMap("extras", extraWritableMap);
 
-        params.putString("type", ALIYUN_PUSH_TYPE_NOTIFICATION);
+        params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudPushReceived", params);
     }
 
     @Override
@@ -92,10 +92,10 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         params.putString("title", title);
         params.putString("extraStr", extraMap);
 
-        params.putString("type", ALIYUN_PUSH_TYPE_NOTIFICATION);
+        params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
         params.putString("actionIdentifier", "opened");
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudPushReceived", params);
     }
 
     @Override
@@ -107,10 +107,10 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         params.putString("title", title);
         params.putString("extraStr", extraMap);
 
-        params.putString("type", ALIYUN_PUSH_TYPE_NOTIFICATION);
+        params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
         params.putString("actionIdentifier", "opened");
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudReceived", params);
     }
 
     @Override
@@ -120,10 +120,10 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         WritableMap params = Arguments.createMap();
         params.putString("messageId", messageId);
 
-        params.putString("type", ALIYUN_PUSH_TYPE_NOTIFICATION);
+        params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
         params.putString("actionIdentifier", "removed");
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudPushReceived", params);
     }
 
     @Override
@@ -143,9 +143,9 @@ public class AliyunPushMessageReceiver extends MessageReceiver {
         }
         params.putMap("extras", extraWritableMap);
 
-        params.putString("type", ALIYUN_PUSH_TYPE_NOTIFICATION);
+        params.putString("type", ALICLOUD_PUSH_TYPE_NOTIFICATION);
 
-        sendEvent("aliyunPushReceived", params);
+        sendEvent("AliCloudPushReceived", params);
     }
 
     private void sendEvent(String eventName, @Nullable WritableMap params) {

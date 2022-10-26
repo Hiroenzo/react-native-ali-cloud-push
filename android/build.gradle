@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-description = 'react-native-aliyun-push'
+description = 'react-native-ali-cloud-push'
 
 buildscript {
     repositories {

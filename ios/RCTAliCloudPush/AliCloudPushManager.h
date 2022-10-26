@@ -11,9 +11,9 @@
 #import <React/RCTEventEmitter.h>
 #import <UIKit/UIKit.h>
 
-@interface AliyunPushManager : RCTEventEmitter
+@interface AliCloudPushManager : RCTEventEmitter
 
-+ (AliyunPushManager *)sharedInstance;
++ (AliCloudPushManager *)sharedInstance;
 
 
 - (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)lauchOptions createNotificationCategoryHandler:(void (^)(void))categoryHandler;

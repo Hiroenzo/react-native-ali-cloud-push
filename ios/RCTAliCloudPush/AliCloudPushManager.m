@@ -11,7 +11,7 @@
 #import <React/RCTEventDispatcher.h>
 #import <React/RCTUtils.h>
 
-#import "AliyunPushManager.h"
+#import "AliCloudPushManager.h"
 #import <CloudPushSDK/CloudPushSDK.h>
 
 // iOS 10 notification
@@ -27,18 +27,18 @@
 // output log both debug and release
 #define ALog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 
-NSString *const ALIYUN_PUSH_TYPE_MESSAGE = @"message";
-NSString *const ALIYUN_PUSH_TYPE_NOTIFICATION = @"notification";
+NSString *const ALICLOUD_PUSH_TYPE_MESSAGE = @"message";
+NSString *const ALICLOUD_PUSH_TYPE_NOTIFICATION = @"notification";
 
-@interface AliyunPushManager () <UNUserNotificationCenterDelegate>
+@interface AliCloudPushManager () <UNUserNotificationCenterDelegate>
 @end
 
-@implementation AliyunPushManager
+@implementation AliCloudPushManager
 {
     bool hasListeners;
 }
 
-static AliyunPushManager * sharedInstance = nil;
+static AliCloudPushManager * sharedInstance = nil;
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -49,7 +49,7 @@ static AliyunPushManager * sharedInstance = nil;
 
 + (id)allocWithZone:(NSZone *)zone
 {
-    static AliyunPushManager *sharedInstance = nil;
+    static AliCloudPushManager *sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [super allocWithZone:zone];
@@ -70,7 +70,7 @@ static AliyunPushManager * sharedInstance = nil;
     
     if(!(self = [super init]))
     {
-        DLog(@"init AliyunPushManager error");
+        DLog(@"init AliCloudPushManager error");
     }
     sharedInstance = self;
     return self;
@@ -80,7 +80,7 @@ static AliyunPushManager * sharedInstance = nil;
 /**
  * 获取单例
  */
-+ (AliyunPushManager *)sharedInstance
++ (AliCloudPushManager *)sharedInstance
 {
     @synchronized(self)
     {
@@ -93,7 +93,7 @@ static AliyunPushManager * sharedInstance = nil;
 }
 
 
-RCT_EXPORT_MODULE(AliyunPush);
+RCT_EXPORT_MODULE(AliCloudPush);
 
 #pragma mark React Native Method
 
@@ -336,15 +336,15 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
 
 - (NSArray<NSString *> *)supportedEvents
 {
-    return @[@"aliyunPushReceived"];
+    return @[@"aliCloudPushReceived"];
 }
 
 #pragma mark
 
 /**
  * 设置参数
- * @param appKey aliyun push appKey
- * @param appSecret aliyun push appSecret
+ * @param appKey aliCloud push appKey
+ * @param appSecret aliCloud push appSecret
  * @param launchOptions app launch Options
  * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
@@ -506,7 +506,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     notificationDict[@"extras"] =userInfo;
     
     // 类型 “notification” or "message"
-    notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
+    notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
     
     // sent to Js
     [self sendEventToJs:notificationDict];
@@ -559,7 +559,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     notificationDict[@"extras"] = userInfo;
     
     // 类型 “notification” or "message"
-    notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
+    notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
     
     if([response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier])
     {
@@ -619,7 +619,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     notificationDict[@"extras"] =userInfo;
     
     // 类型 “notification” or "message"
-    notificationDict[@"type"] = ALIYUN_PUSH_TYPE_NOTIFICATION;
+    notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_NOTIFICATION;
     
     // sent to Js
     [self sendEventToJs:notificationDict];
@@ -694,7 +694,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     }
     
     // 类型 “notification” or "message"
-    notificationDict[@"type"] = ALIYUN_PUSH_TYPE_MESSAGE;
+    notificationDict[@"type"] = ALICLOUD_PUSH_TYPE_MESSAGE;
     
     [self sendEventToJs:notificationDict];
 }
@@ -711,7 +711,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
     notification[@"appState"] = [self getAppState];
 
     //修正app退出后，点击通知会闪退bug
-    AliyunPushManager* __weak weakSelf = self;
+    AliCloudPushManager* __weak weakSelf = self;
     if(!hasListeners)
     {
         initialNotification = notification;
@@ -722,7 +722,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback)
         if([UIApplication sharedApplication].applicationState == UIApplicationStateActive
            ||[UIApplication sharedApplication].applicationState == UIApplicationStateInactive)
         {
-            [weakSelf sendEventWithName:@"aliyunPushReceived" body:notification];
+            [weakSelf sendEventWithName:@"aliCloudPushReceived" body:notification];
         }
     });
 }
