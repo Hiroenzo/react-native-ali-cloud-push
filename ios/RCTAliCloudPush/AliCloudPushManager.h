@@ -11,12 +11,11 @@
 #import <React/RCTEventEmitter.h>
 #import <UIKit/UIKit.h>
 
-@interface AliyunPushManager : RCTEventEmitter
+@interface AliCloudPushManager : RCTEventEmitter
 
-+ (AliyunPushManager *)sharedInstance;
++ (AliCloudPushManager *)sharedInstance;
 
-
-- (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)lauchOptions createNotificationCategoryHandler:(void (^)(void))categoryHandler;
+- (void)setParams:(BOOL)autoInit appKey:(NSString *)appKey appSecret:(NSString *)appSecret launchOptions:(NSDictionary *)lauchOptions createNotificationCategoryHandler:(void (^)(void))categoryHandler;
 
 // notification settings
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;
@@ -29,6 +28,5 @@
 
 // Notification Open
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler;
-
 
 @end

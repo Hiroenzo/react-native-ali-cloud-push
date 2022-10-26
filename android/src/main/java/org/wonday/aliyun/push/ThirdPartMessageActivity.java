@@ -35,8 +35,8 @@ public class ThirdPartMessageActivity extends AndroidPopupActivity {
      */
     @Override
     protected void onSysNoticeOpened(String title, String summary, Map<String, String> extMap) {
-        if (AliyunPushMessageReceiver.instance!=null) {
-            AliyunPushMessageReceiver.instance.onNotification(context, title, summary, extMap);
+        if (AliCloudPushMessageReceiver.instance!=null) {
+            AliCloudPushMessageReceiver.instance.onNotification(context, title, summary, extMap);
 
             if (ThirdPartMessageActivity.mainClass!=null) {
                 Intent itent=new Intent();

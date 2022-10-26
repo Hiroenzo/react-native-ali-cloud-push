@@ -43,16 +43,16 @@ import me.leolin.shortcutbadger.ShortcutBadger;
 
 import org.wonday.aliyun.push.MIUIUtils;
 
-public class AliyunPushModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
+public class AliCloudPushModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
     private final ReactApplicationContext context;
     private int badgeNumber;
 
-    public AliyunPushModule(ReactApplicationContext reactContext) {
+    public AliCloudPushModule(ReactApplicationContext reactContext) {
 
         super(reactContext);
         this.context = reactContext;
         this.badgeNumber = 0;
-        AliyunPushMessageReceiver.context = reactContext;
+        AliCloudPushMessageReceiver.context = reactContext;
         ThirdPartMessageActivity.context = reactContext;
 
         context.addLifecycleEventListener(this);
@@ -62,7 +62,7 @@ public class AliyunPushModule extends ReactContextBaseJavaModule implements Life
     //module name
     @Override
     public String getName() {
-        return "AliyunPush";
+        return "AliCloudPush";
     }
 
     @ReactMethod
@@ -280,6 +280,6 @@ public class AliyunPushModule extends ReactContextBaseJavaModule implements Life
 
     @ReactMethod
     public void getInitialMessage(final Promise promise){
-        promise.resolve(AliyunPushMessageReceiver.initialMessage);
+        promise.resolve(AliCloudPushMessageReceiver.initialMessage);
     }
 }

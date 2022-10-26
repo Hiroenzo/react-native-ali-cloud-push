@@ -3,9 +3,9 @@ version = JSON.parse(File.read("package.json"))["version"]
 
 Pod::Spec.new do |spec|
 
-  spec.name         = "RCTAliyunPush"
+  spec.name         = "RCTAliCloudPush"
   spec.version      = version
-  spec.summary      = "A short description of RCTAliyunPush."
+  spec.summary      = "A short description of RCTAliCloudPush."
   spec.homepage     = "https://github.com/a188658587/react-native-aliyun-push"
   spec.license      = "MIT"
   spec.author             = { "wwwlin" => "188658587@qq.com" }
