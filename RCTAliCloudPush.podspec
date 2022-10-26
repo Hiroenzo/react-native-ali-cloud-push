@@ -6,14 +6,14 @@ Pod::Spec.new do |spec|
   spec.name         = "RCTAliCloudPush"
   spec.version      = version
   spec.summary      = "A short description of RCTAliCloudPush."
-  spec.homepage     = "https://github.com/a188658587/react-native-aliyun-push"
+  spec.homepage     = "https://github.com/Hiroenzo/react-native-ali-cloud-push"
   spec.license      = "MIT"
-  spec.author             = { "wwwlin" => "188658587@qq.com" }
-  spec.ios.deployment_target = "9.0"
-  spec.tvos.deployment_target = "9.0"
-  spec.source         = { :git => 'https://github.com/a188658587/react-native-aliyun-push.git', :tag => "v#{spec.version}"}
+  spec.author             = { "Hiroenzo" => "kyriechung@outlook.com" }
+  spec.ios.deployment_target = "11.0"
+  spec.tvos.deployment_target = "11.0"
+  spec.source         = { :git => 'https://github.com/Hiroenzo/react-native-ali-cloud-push.git', :tag => "v#{spec.version}"}
   spec.source_files  =  "ios/**/*.{h,m}"
-  spec.vendored_frameworks = "ios/libs/AlicloudUtils.framework","ios/libs/CloudPushSDK.framework","ios/libs/UTDID.framework","ios/libs/UTMini.framework"
+  spec.vendored_frameworks = "ios/libs/AlicloudUtils.framework","ios/libs/CloudPushSDK.framework","ios/libs/UTDID.framework","ios/libs/UTMini.framework","ios/libs/AlicloudSender.framework","ios/libs/EMASRest.framework"
   spec.libraries = "z", "resolv", "sqlite3"
 
   spec.requires_arc = true
