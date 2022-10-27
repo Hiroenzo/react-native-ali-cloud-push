@@ -48,7 +48,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     private int badgeNumber;
 
     public AliCloudPushModule(ReactApplicationContext reactContext) {
-
         super(reactContext);
         this.context = reactContext;
         this.badgeNumber = 0;
@@ -56,7 +55,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         ThirdPartMessageActivity.context = reactContext;
 
         context.addLifecycleEventListener(this);
-
     }
 
     //module name
@@ -75,46 +73,33 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
             try{
                 Thread.sleep(3000);
                 deviceID = PushServiceFactory.getCloudPushService().getDeviceId();
-
                 if (deviceID!=null && deviceID.length()>0) {
                     promise.resolve(deviceID);
                     return;
                 }
             } catch (Exception e) {
-
             }
-
             promise.reject("getDeviceId() failed.");
         }
     }
 
     @ReactMethod
     public void setApplicationIconBadgeNumber(int badgeNumber, final Promise promise) {
-
         if (MIUIUtils.isMIUI(getReactApplicationContext())) { //小米特殊处理
             FLog.d(ReactConstants.TAG, "setApplicationIconBadgeNumber for xiaomi");
-
             if (badgeNumber==0) {
                 promise.resolve("");
                 return;
             }
-
             try {
-
                 MIUIUtils.setBadgeNumber(this.context, getCurrentActivity().getClass(), badgeNumber);
                 this.badgeNumber = badgeNumber;
                 promise.resolve("");
-
             } catch (Exception e) {
-
                 promise.reject(e.getMessage());
-
             }
-
-
         } else {
             FLog.d(ReactConstants.TAG, "setApplicationIconBadgeNumber for normal");
-
             try {
                 ShortcutBadger.applyCount(this.context, badgeNumber);
                 this.badgeNumber = badgeNumber;
@@ -123,7 +108,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
                 promise.reject(e.getMessage());
             }
         }
-
     }
 
     @ReactMethod
@@ -161,10 +145,8 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void bindTag(int target, ReadableArray tags, String alias, final Promise promise) {
-
         String[] tagStrs = new String[tags.size()];
         for(int i=0; i<tags.size();i++) tagStrs[i] = tags.getString(i);
-
         PushServiceFactory.getCloudPushService().bindTag(target, tagStrs, alias, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
@@ -179,10 +161,8 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @ReactMethod
     public void unbindTag(int target, ReadableArray  tags, String alias, final Promise promise) {
-
         String[] tagStrs = new String[tags.size()];
         for(int i=0; i<tags.size();i++) tagStrs[i] = tags.getString(i);
-
         PushServiceFactory.getCloudPushService().unbindTag(target, tagStrs, alias, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
@@ -258,7 +238,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostPause() {
-
         //小米特殊处理, 处于后台时更新角标， 否则会被系统清除，看不到
         if (MIUIUtils.isMIUI(getReactApplicationContext())) {
             FLog.d(ReactConstants.TAG, "onHostPause:setBadgeNumber for xiaomi");
@@ -269,13 +248,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostDestroy() {
-
         //小米特殊处理, 处于后台时更新角标， 否则会被系统清除，看不到
         if (MIUIUtils.isMIUI(getReactApplicationContext())) {
             FLog.d(ReactConstants.TAG, "onHostDestroy:setBadgeNumber for xiaomi");
             MIUIUtils.setBadgeNumber(this.context, getCurrentActivity().getClass(), badgeNumber);
         }
-
     }
 
     @ReactMethod
