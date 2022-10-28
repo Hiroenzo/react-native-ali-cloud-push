@@ -133,7 +133,8 @@ RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger)num resolver:(RCTPromiseResolveBlock)r
 }
 
 /**
- * 获取DeviceID
+ *  获取本机的deviceId (deviceId为推送系统的设备标识)
+ *  @return deviceId
  */
 RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -161,7 +162,9 @@ RCT_EXPORT_METHOD(getDeviceId:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromi
 }
 
 /**
- * 绑定账号
+ *  绑定账号
+ *  将应用内账号和推送通道相关联，可以实现按账号的定点消息推送
+ *  @param account   账号名
  */
 RCT_EXPORT_METHOD(bindAccount:(NSString *)account resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -178,7 +181,8 @@ RCT_EXPORT_METHOD(bindAccount:(NSString *)account resolver:(RCTPromiseResolveBlo
 }
 
 /**
- * 解绑账号
+ *  解绑账号
+ *  将应用内账号和推送通道取消关联
  */
 RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -195,7 +199,11 @@ RCT_EXPORT_METHOD(unbindAccount:(RCTPromiseResolveBlock)resolve rejecter:(RCTPro
 }
 
 /**
- * 绑定标签
+ *  向指定目标添加自定义标签
+ *  支持向本设备/本设备绑定账号/别名添加自定义标签，目标类型由target指定
+ *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
+ *  @param tags     标签名
+ *  @param alias   别名（仅当target = 3时生效）
  */
 RCT_EXPORT_METHOD(bindTag:(int)target withTags:(NSArray *)tags withAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -213,7 +221,11 @@ RCT_EXPORT_METHOD(bindTag:(int)target withTags:(NSArray *)tags withAlias:(NSStri
 }
 
 /**
- * 解绑标签
+ *  删除指定目标的自定义标签
+ *  支持从本设备/本设备绑定账号/别名删除自定义标签，目标类型由target指定
+ *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
+ *  @param tags     标签名
+ *  @param alias   别名（仅当target = 3时生效）
  */
 RCT_EXPORT_METHOD(unbindTag:(int)target withTags:(NSArray *)tags withAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -231,7 +243,9 @@ RCT_EXPORT_METHOD(unbindTag:(int)target withTags:(NSArray *)tags withAlias:(NSSt
 }
 
 /**
- * 获取标签列表
+ * 查询绑定标签
+ * 查询目标绑定的标签，当前仅支持查询设备标签
+ * @param target      目标类型，1：本设备（当前仅支持查询本设备绑定标签）
  */
 RCT_EXPORT_METHOD(listTags:(int)target resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -250,6 +264,8 @@ RCT_EXPORT_METHOD(listTags:(int)target resolver:(RCTPromiseResolveBlock)resolve 
 
 /**
  * 添加别名
+ * 为设备添加别名
+ * @param alias 别名名称
  */
 RCT_EXPORT_METHOD(addAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -268,6 +284,8 @@ RCT_EXPORT_METHOD(addAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)re
 
 /**
  * 删除别名
+ * 删除设备别名
+ * @param alias 别名名称 （alias = null or alias.length = 0 时，删除设备全部别名）
  */
 RCT_EXPORT_METHOD(removeAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -285,7 +303,8 @@ RCT_EXPORT_METHOD(removeAlias:(NSString *)alias resolver:(RCTPromiseResolveBlock
 }
 
 /**
- * 获取别名列表
+ * 查询别名
+ * 查询设备别名
  */
 RCT_EXPORT_METHOD(listAliases:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 {
@@ -472,6 +491,10 @@ RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseReso
 #pragma mark SDK Init
 
 
+/**
+ *  自动初始化SDK
+ *  无需配置appKey和appSecret，结合AliyunEmasServices-Info.plist配置文件使用；
+ */
 - (void)autoInitCloudPush
 {
     // 正式上线建议关闭
@@ -491,7 +514,12 @@ RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseReso
     }];
 }
 
-
+/**
+ *  手动初始化SDK
+ *  输入appKey和appSecret初始化推送SDK
+ *  @param appKey        appKey
+ *  @param appSecret appSecret
+ */
 - (void)initCloudPush:(NSString *)appKey appSecret:(NSString *)appSecret
 {
     // 正式上线建议关闭

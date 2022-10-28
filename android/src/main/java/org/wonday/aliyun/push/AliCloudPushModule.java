@@ -63,6 +63,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         return "AliCloudPush";
     }
 
+
+    /**
+     *  获取本机的deviceId (deviceId为推送系统的设备标识)
+     *  @return deviceId
+     */
     @ReactMethod
     public void getDeviceId(final Promise promise) {
         String deviceID = PushServiceFactory.getCloudPushService().getDeviceId();
@@ -115,6 +120,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         callback.invoke(this.badgeNumber);
     }
 
+    /**
+     *  绑定账号
+     *  将应用内账号和推送通道相关联，可以实现按账号的定点消息推送
+     *  @param account   账号名
+     */
     @ReactMethod
     public void bindAccount(String account, final Promise promise) {
         PushServiceFactory.getCloudPushService().bindAccount(account, new CommonCallback() {
@@ -129,6 +139,10 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     *  解绑账号
+     *  将应用内账号和推送通道取消关联
+     */
     @ReactMethod
     public void unbindAccount(final Promise promise) {
         PushServiceFactory.getCloudPushService().unbindAccount(new CommonCallback() {
@@ -143,6 +157,13 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     *  向指定目标添加自定义标签
+     *  支持向本设备/本设备绑定账号/别名添加自定义标签，目标类型由target指定
+     *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
+     *  @param tags     标签名
+     *  @param alias   别名（仅当target = 3时生效）
+     */
     @ReactMethod
     public void bindTag(int target, ReadableArray tags, String alias, final Promise promise) {
         String[] tagStrs = new String[tags.size()];
@@ -159,6 +180,13 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     *  删除指定目标的自定义标签
+     *  支持从本设备/本设备绑定账号/别名删除自定义标签，目标类型由target指定
+     *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
+     *  @param tags     标签名
+     *  @param alias   别名（仅当target = 3时生效）
+     */
     @ReactMethod
     public void unbindTag(int target, ReadableArray  tags, String alias, final Promise promise) {
         String[] tagStrs = new String[tags.size()];
@@ -175,6 +203,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     * 查询绑定标签
+     * 查询目标绑定的标签，当前仅支持查询设备标签
+     * @param target      目标类型，1：本设备（当前仅支持查询本设备绑定标签）
+     */
     @ReactMethod
     public void listTags(int target, final Promise promise) {
         PushServiceFactory.getCloudPushService().listTags(target, new CommonCallback() {
@@ -189,6 +222,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     * 添加别名
+     * 为设备添加别名
+     * @param alias 别名名称
+     */
     @ReactMethod
     public void addAlias(String alias, final Promise promise) {
         PushServiceFactory.getCloudPushService().addAlias(alias, new CommonCallback() {
@@ -203,6 +241,11 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     * 删除别名
+     * 删除设备别名
+     * @param alias 别名名称 （alias = null or alias.length = 0 时，删除设备全部别名）
+     */
     @ReactMethod
     public void removeAlias(String alias, final Promise promise) {
         PushServiceFactory.getCloudPushService().removeAlias(alias, new CommonCallback() {
@@ -217,6 +260,10 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         });
     }
 
+    /**
+     * 查询别名
+     * 查询设备别名
+     */
     @ReactMethod
     public void listAliases(final Promise promise) {
         PushServiceFactory.getCloudPushService().listAliases(new CommonCallback() {
@@ -243,7 +290,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
             FLog.d(ReactConstants.TAG, "onHostPause:setBadgeNumber for xiaomi");
             MIUIUtils.setBadgeNumber(this.context, getCurrentActivity().getClass(), badgeNumber);
         }
-
     }
 
     @Override
