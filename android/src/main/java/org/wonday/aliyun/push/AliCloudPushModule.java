@@ -57,28 +57,36 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         context.addLifecycleEventListener(this);
     }
 
-    //module name
+    // module name
     @Override
     public String getName() {
         return "AliCloudPush";
     }
 
+    /**
+     * 适配iOS调用初始化方法
+     */
+    @ReactMethod
+    public void initCloudPush(final Promise promise) {
+        promise.resolve("");
+    }
+
 
     /**
-     *  获取本机的deviceId (deviceId为推送系统的设备标识)
-     *  @return deviceId
+     * 获取设备标识
+     * 获取设备唯一标识，指定设备推送时需要
      */
     @ReactMethod
     public void getDeviceId(final Promise promise) {
         String deviceID = PushServiceFactory.getCloudPushService().getDeviceId();
-        if (deviceID!=null && deviceID.length()>0) {
+        if (deviceID != null && deviceID.length() > 0) {
             promise.resolve(deviceID);
         } else {
             // 或许还没有初始化完成，等3秒钟再次尝试
             try{
                 Thread.sleep(3000);
                 deviceID = PushServiceFactory.getCloudPushService().getDeviceId();
-                if (deviceID!=null && deviceID.length()>0) {
+                if (deviceID != null && deviceID.length() > 0) {
                     promise.resolve(deviceID);
                     return;
                 }
@@ -88,9 +96,14 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         }
     }
 
+    /**
+     * 设置角标
+     * @param badgeNumber 角标数量
+     */
     @ReactMethod
-    public void setApplicationIconBadgeNumber(int badgeNumber, final Promise promise) {
-        if (MIUIUtils.isMIUI(getReactApplicationContext())) { //小米特殊处理
+    public void setBadgeNumber(int badgeNumber, final Promise promise) {
+        // 小米特殊处理
+        if (MIUIUtils.isMIUI(getReactApplicationContext())) {
             FLog.d(ReactConstants.TAG, "setApplicationIconBadgeNumber for xiaomi");
             if (badgeNumber==0) {
                 promise.resolve("");
@@ -115,15 +128,19 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
         }
     }
 
+    /**
+     * 获取角标
+     * @param callback 回调
+     */
     @ReactMethod
-    public void getApplicationIconBadgeNumber(Callback callback) {
+    public void getBadgeNumber(Callback callback) {
         callback.invoke(this.badgeNumber);
     }
 
     /**
-     *  绑定账号
-     *  将应用内账号和推送通道相关联，可以实现按账号的定点消息推送
-     *  @param account   账号名
+     * 绑定账号
+     * 将应用内账号和推送通道相关联，可以实现按账号的定点消息推送
+     * @param account 账号名
      */
     @ReactMethod
     public void bindAccount(String account, final Promise promise) {
@@ -140,8 +157,8 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     }
 
     /**
-     *  解绑账号
-     *  将应用内账号和推送通道取消关联
+     * 解绑账号
+     * 将应用内账号和推送通道取消关联
      */
     @ReactMethod
     public void unbindAccount(final Promise promise) {
@@ -158,11 +175,18 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     }
 
     /**
-     *  向指定目标添加自定义标签
-     *  支持向本设备/本设备绑定账号/别名添加自定义标签，目标类型由target指定
-     *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
-     *  @param tags     标签名
-     *  @param alias   别名（仅当target = 3时生效）
+     * 向指定目标添加自定义标签
+     * 支持向本设备/本设备绑定账号/别名添加自定义标签，目标类型由target指定
+     * @param target 目标类型可选值：
+     *               1：本设备
+     *               2：本设备绑定的账号
+     *               3：别名
+     *               目标类型可选值（SDK版本V2.3.5及以上版本）：
+     *               CloudPushService.DEVICE_TARGET：本设备
+     *               CloudPushService.ACCOUNT_TARGET：本账号
+     *               CloudPushService.ALIAS_TARGET：别名
+     * @param tags   标签名
+     * @param alias  别名（仅当target = 3时生效）
      */
     @ReactMethod
     public void bindTag(int target, ReadableArray tags, String alias, final Promise promise) {
@@ -183,9 +207,16 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     /**
      *  删除指定目标的自定义标签
      *  支持从本设备/本设备绑定账号/别名删除自定义标签，目标类型由target指定
-     *  @param target 目标类型，1：本设备  2：本设备绑定账号  3：别名
-     *  @param tags     标签名
-     *  @param alias   别名（仅当target = 3时生效）
+     * @param target 目标类型可选值：
+     *               1：本设备
+     *               2：本设备绑定的账号
+     *               3：别名
+     *               目标类型可选值（SDK版本V2.3.5及以上版本）：
+     *               CloudPushService.DEVICE_TARGET：本设备
+     *               CloudPushService.ACCOUNT_TARGET：本账号
+     *               CloudPushService.ALIAS_TARGET：别名
+     *  @param tags  标签名
+     *  @param alias 别名（仅当target = 3时生效）
      */
     @ReactMethod
     public void unbindTag(int target, ReadableArray  tags, String alias, final Promise promise) {
@@ -206,7 +237,10 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     /**
      * 查询绑定标签
      * 查询目标绑定的标签，当前仅支持查询设备标签
-     * @param target      目标类型，1：本设备（当前仅支持查询本设备绑定标签）
+     * @param target 目标类型可选值：
+     *               1：本设备
+     *               目标类型可选值（SDK版本V2.3.5及以上版本）：
+     *               CloudPushService.DEVICE_TARGET：本设备
      */
     @ReactMethod
     public void listTags(int target, final Promise promise) {
@@ -285,7 +319,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostPause() {
-        //小米特殊处理, 处于后台时更新角标， 否则会被系统清除，看不到
+        //小米特殊处理, 处于后台时更新角标，否则会被系统清除，看不到
         if (MIUIUtils.isMIUI(getReactApplicationContext())) {
             FLog.d(ReactConstants.TAG, "onHostPause:setBadgeNumber for xiaomi");
             MIUIUtils.setBadgeNumber(this.context, getCurrentActivity().getClass(), badgeNumber);
@@ -294,7 +328,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
 
     @Override
     public void onHostDestroy() {
-        //小米特殊处理, 处于后台时更新角标， 否则会被系统清除，看不到
+        //小米特殊处理, 处于后台时更新角标，否则会被系统清除，看不到
         if (MIUIUtils.isMIUI(getReactApplicationContext())) {
             FLog.d(ReactConstants.TAG, "onHostDestroy:setBadgeNumber for xiaomi");
             MIUIUtils.setBadgeNumber(this.context, getCurrentActivity().getClass(), badgeNumber);

@@ -94,7 +94,7 @@ RCT_EXPORT_MODULE(AliCloudPush);
 /**
  * 设置BadgeNumber
  */
-RCT_EXPORT_METHOD(setApplicationIconBadgeNumber:(NSInteger)number) {
+RCT_EXPORT_METHOD(setBadgeNumber:(NSInteger)number) {
     dispatch_async(dispatch_get_main_queue(), ^{
         RCTSharedApplication().applicationIconBadgeNumber = number;
     });
@@ -103,14 +103,14 @@ RCT_EXPORT_METHOD(setApplicationIconBadgeNumber:(NSInteger)number) {
 /**
  * 获取BadgeNumber
  */
-RCT_EXPORT_METHOD(getApplicationIconBadgeNumber:(RCTResponseSenderBlock)callback) {
+RCT_EXPORT_METHOD(getBadgeNumber:(RCTResponseSenderBlock)callback) {
     callback(@[@(RCTSharedApplication().applicationIconBadgeNumber)]);
 }
 
 /**
  * 同步BadgeNumber至服务端
  */
-RCT_EXPORT_METHOD(syncBadgeNum:(NSInteger)num resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
+RCT_EXPORT_METHOD(syncBadgeNumer:(NSInteger)num resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
     [CloudPushSDK syncBadgeNum:num withCallback:^(CloudPushCallbackResult *res){
         if (res.success) {
             resolve(@"");

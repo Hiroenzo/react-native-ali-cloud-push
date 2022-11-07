@@ -35,10 +35,9 @@ yarn add react-native-ali-cloud-push
 
 ### 阿里云SDK接口封装
 
-**初始化**
+**初始化 (仅ios支持)**
 
 参数：
-- autoInit 是否开启自动初始化
 - appKey appKey
 - appSecret appSecret
 - launchOptions 启动参数
@@ -207,13 +206,13 @@ AliCloudPush.listAliases()
 
 示例:
 ```
-AliCloudPush.setApplicationIconBadgeNumber(5);
+AliCloudPush.setBadgeNumber(5);
 ```
 **获取桌面图标角标数字** (ios支持，android支持绝大部分手机)
 
 示例:
 ```
-AliCloudPush.getApplicationIconBadgeNumber((num)=>{
+AliCloudPush.getBadgeNumber((num)=>{
     console.log("ApplicationIconBadgeNumber:" + num);
 });
 ```
@@ -224,7 +223,7 @@ AliCloudPush.getApplicationIconBadgeNumber((num)=>{
 
 示例:
 ```
-AliCloudPush.syncBadgeNum(5);
+AliCloudPush.syncBadgeNumer(5);
 ```
 **获取用户是否开启通知设定** (ios 10.0+支持)
 
