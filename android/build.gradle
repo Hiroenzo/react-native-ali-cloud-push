@@ -27,7 +27,7 @@ repositories {
         dirs 'libs' //this way we can find the .aar file in libs folder
     }
     maven {
-        url 'http://maven.aliyun.com/nexus/content/repositories/releases/'
+        url 'https://maven.aliyun.com/nexus/content/repositories/releases/'
     }
     // 配置HMS Core SDK的Maven仓地址。
     maven {
