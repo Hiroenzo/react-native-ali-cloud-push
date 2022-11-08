@@ -9,10 +9,8 @@
 package org.wonday.aliyun.push;
 
 import java.util.Map;
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.content.Context;
 
 import com.alibaba.sdk.android.push.AndroidPopupActivity;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -39,9 +37,9 @@ public class ThirdPartMessageActivity extends AndroidPopupActivity {
             AliCloudPushMessageReceiver.instance.onNotification(context, title, summary, extMap);
 
             if (ThirdPartMessageActivity.mainClass!=null) {
-                Intent itent=new Intent();
-                itent.setClass(ThirdPartMessageActivity.this, mainClass);
-                startActivity(itent);
+                Intent intent=new Intent();
+                intent.setClass(ThirdPartMessageActivity.this, mainClass);
+                startActivity(intent);
                 ThirdPartMessageActivity.this.finish();
             }
         }
