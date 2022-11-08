@@ -2,7 +2,6 @@ package org.wonday.aliyun.push;
 
 import android.content.Context;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class SystemProperty {

@@ -8,31 +8,14 @@
 
 package org.wonday.aliyun.push;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Properties;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.List;
-
-import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.Context;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.os.SystemClock;
-import android.os.Environment;
-import android.app.ActivityManager.RunningAppProcessInfo;
-import android.content.ComponentName;
-import android.app.ActivityManager.RunningTaskInfo;
+import android.content.Intent;
 
-import com.facebook.react.common.ReactConstants;
-import com.facebook.common.logging.FLog;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 public class MIUIUtils {
 

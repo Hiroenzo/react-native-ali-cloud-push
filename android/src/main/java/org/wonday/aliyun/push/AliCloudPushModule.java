@@ -8,40 +8,19 @@
 
 package org.wonday.aliyun.push;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
-import android.content.BroadcastReceiver;
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.Context;
-import android.os.Handler;
-import android.util.Log;
-
-import com.facebook.react.bridge.NativeModule;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
-import com.facebook.react.bridge.ReactContextBaseJavaModule;
-import com.facebook.react.bridge.ReactMethod;
+import com.alibaba.sdk.android.push.CommonCallback;
+import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
+import com.facebook.common.logging.FLog;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.LifecycleEventListener;
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.common.ReactConstants;
-import com.facebook.common.logging.FLog;
 
-import com.alibaba.sdk.android.push.CloudPushService;
-import com.alibaba.sdk.android.push.noonesdk.PushServiceFactory;
-import com.alibaba.sdk.android.push.CommonCallback;
 import me.leolin.shortcutbadger.ShortcutBadger;
-
-import org.wonday.aliyun.push.MIUIUtils;
 
 public class AliCloudPushModule extends ReactContextBaseJavaModule implements LifecycleEventListener {
     private final ReactApplicationContext context;
@@ -64,15 +43,6 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     }
 
     /**
-     * 适配iOS调用初始化方法
-     */
-    @ReactMethod
-    public void initCloudPush(final Promise promise) {
-        promise.resolve("");
-    }
-
-
-    /**
      * 获取设备标识
      * 获取设备唯一标识，指定设备推送时需要
      */
@@ -83,7 +53,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
             promise.resolve(deviceID);
         } else {
             // 或许还没有初始化完成，等3秒钟再次尝试
-            try{
+            try {
                 Thread.sleep(3000);
                 deviceID = PushServiceFactory.getCloudPushService().getDeviceId();
                 if (deviceID != null && deviceID.length() > 0) {
@@ -191,7 +161,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void bindTag(int target, ReadableArray tags, String alias, final Promise promise) {
         String[] tagStrs = new String[tags.size()];
-        for(int i=0; i<tags.size();i++) tagStrs[i] = tags.getString(i);
+        for(int i=0; i<tags.size(); i++) tagStrs[i] = tags.getString(i);
         PushServiceFactory.getCloudPushService().bindTag(target, tagStrs, alias, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
@@ -221,7 +191,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     @ReactMethod
     public void unbindTag(int target, ReadableArray  tags, String alias, final Promise promise) {
         String[] tagStrs = new String[tags.size()];
-        for(int i=0; i<tags.size();i++) tagStrs[i] = tags.getString(i);
+        for(int i=0; i<tags.size(); i++) tagStrs[i] = tags.getString(i);
         PushServiceFactory.getCloudPushService().unbindTag(target, tagStrs, alias, new CommonCallback() {
             @Override
             public void onSuccess(String response) {
