@@ -30,9 +30,11 @@ function getKey(listener, type){
     return listener[META];
 }
 
-
 export default class AliCloudPush {
     static initCloudPush = (params) => {
+        if (Platform.OS === 'android') {
+            return new Promise((resolve) => resolve("iOS only"));
+        }
         return AliCloudPushNative.initCloudPush(params);
     }
 
