@@ -331,7 +331,7 @@ RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseReso
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
     [CloudPushSDK sendNotificationAck:launchOptions];
     
-    resolve(nil)
+    resolve(nil);
 }
 
 /**
