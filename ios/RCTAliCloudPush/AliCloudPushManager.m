@@ -282,14 +282,6 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback) {
     }
 }
 
-/**
- * 初始化SDK
- * @param options 初始化参数
- */
-RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject) {
-    [self setParams:options resolver:resolve rejecter:reject];
-}
-
 #pragma mark
 
 - (NSArray<NSString *> *)supportedEvents {
@@ -300,27 +292,18 @@ RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseReso
 
 /**
  * 设置参数
- * @param options
- * @param appKey 阿里云推送appKey
- * @param appSecret 阿里云推送appSecret
+ * @param appKey aliyun push appKey
+ * @param appSecret aliyun push appSecret
  * @param launchOptions app launch Options
+ * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
-- (void)setParams:(NSDictionary *)options resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject {
+- (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler {
+
     // APNs注册，获取deviceToken并上报
     [self registerAPNs];
-    
-    NSString *appKey = options[@"appKey"];
-    NSString *appSecret = options[@"appSecret"];
-    NSString *launchOptions = options[@"launchOptions"];
 
-    // 不传appKey或appSecret时，默认走自动初始化
-    if (!appKey || !appSecret) {
-        // 自动初始化SDK
-        [self autoInitCloudPush];
-    } else {
-        // 手动初始化SDK
-        [self initCloudPush:appKey appSecret:appSecret];
-    }
+    // 初始化SDK
+    [self initCloudPush:appKey appSecret:appSecret];
 
     // 监听推送通道打开动作
     [self listenerOnChannelOpened];
@@ -330,8 +313,7 @@ RCT_EXPORT_METHOD(initCloudPush:(NSDictionary *)options resolver:(RCTPromiseReso
 
     // 点击通知将App从关闭状态启动时，将通知打开回执上报
     [CloudPushSDK sendNotificationAck:launchOptions];
-    
-    resolve(nil);
+
 }
 
 /**

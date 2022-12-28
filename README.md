@@ -35,24 +35,6 @@ yarn add react-native-ali-cloud-push
 
 ### 阿里云SDK接口封装
 
-**初始化 (仅ios支持)**
-
-参数：
-- appKey appKey
-- appSecret appSecret
-- launchOptions 启动参数
-- categoryHandler 自定义消息分类回调方法
-
-示例:
-```javascript
-AliCloudPush.initCloudPush(params)
-    .then(()=>{
-        //console.log("init:success");
-    })
-    .catch((error)=>{
-        console.log("init:failed");
-    });
-```
 **获取deviceId**
 
 示例:
