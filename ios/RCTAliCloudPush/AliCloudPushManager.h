@@ -15,7 +15,7 @@
 
 + (AliCloudPushManager *)sharedInstance;
 
-- (void)setParams:(BOOL)autoInit appKey:(NSString *)appKey appSecret:(NSString *)appSecret launchOptions:(NSDictionary *)lauchOptions createNotificationCategoryHandler:(void (^)(void))categoryHandler;
+- (void)setParams:(NSDictionary *)options;
 
 // notification settings
 - (void)application:(UIApplication *)application didRegisterUserNotificationSettings:(UIUserNotificationSettings *)notificationSettings;

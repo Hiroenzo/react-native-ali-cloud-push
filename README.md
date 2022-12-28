@@ -9,7 +9,7 @@
 
 ## SDK版本更新
 
-#### Android SDK已更新至 3.7.7 [Android SDK发布说明](https://help.aliyun.com/document_detail/434659.html)
+#### Android SDK已更新至 3.8.0 [Android SDK发布说明](https://help.aliyun.com/document_detail/434659.html)
 
 #### 目前已完成Android12的匹配升级，升级到阿里云EMAS的SDK 3.7.4版本
 #### 注意EMAS SDK 3.7.4 的Android配置发生了变化，[具体参考](https://github.com/evan0204/react-native-aliyun-emas/issues/1)
@@ -44,7 +44,7 @@ yarn add react-native-ali-cloud-push
 - categoryHandler 自定义消息分类回调方法
 
 示例:
-```
+```javascript
 AliCloudPush.initCloudPush(params)
     .then(()=>{
         //console.log("init:success");
@@ -56,7 +56,7 @@ AliCloudPush.initCloudPush(params)
 **获取deviceId**
 
 示例:
-```
+```javascript
 AliCloudPush.getDeviceId()
     .then((deviceId)=>{
         //console.log("deviceId:"+deviceId);
@@ -71,7 +71,7 @@ AliCloudPush.getDeviceId()
 - account 待绑定账号
 
 示例:
-```
+```javascript
 AliCloudPush.bindAccount(account)
     .then((data)=>{
         console.log("bindAccount success");
@@ -85,7 +85,7 @@ AliCloudPush.bindAccount(account)
 **解绑定账号**
 
 示例:
-```
+```javascript
 AliCloudPush.unbindAccount()
     .then((result)=>{
         console.log("unbindAccount success");
@@ -104,7 +104,7 @@ AliCloudPush.unbindAccount()
 - alias 别名（仅当target = 3时生效）
 
 示例:
-```
+```javascript
 AliCloudPush.bindTag(1,["testtag1","testtag2"],"")
     .then((result)=>{
         console.log("bindTag success");
@@ -123,7 +123,7 @@ AliCloudPush.bindTag(1,["testtag1","testtag2"],"")
 - alias 别名（仅当target = 3时生效）
 
 示例:
-```
+```javascript
 AliCloudPush.unbindTag(1,["testTag1"],"")
     .then((result)=>{
         console.log("unbindTag succcess");
@@ -140,7 +140,7 @@ AliCloudPush.unbindTag(1,["testTag1"],"")
 - target 目标类型，1：本设备
 
 示例:
-```
+```javascript
 AliCloudPush.listTags(1)
     .then((result)=>{
         console.log("listTags success");
@@ -157,7 +157,7 @@ AliCloudPush.listTags(1)
 - alias 要添加的别名
 
 示例:
-```
+```javascript
 AliCloudPush.addAlias("testAlias")
     .then((result)=>{
         console.log("addAlias success");
@@ -174,7 +174,7 @@ AliCloudPush.addAlias("testAlias")
 - alias 要移除的别名
 
 示例:
-```
+```javascript
 AliCloudPush.removeAlias("testAlias")
     .then((result)=>{
         console.log("removeAlias success");
@@ -188,7 +188,7 @@ AliCloudPush.removeAlias("testAlias")
 **查询别名列表**
 
 示例:
-```
+```javascript
 AliCloudPush.listAliases()
     .then((result)=>{
         console.log("listAliases success");
@@ -205,13 +205,13 @@ AliCloudPush.listAliases()
 - num角标数字，如果要清除请设置0
 
 示例:
-```
+```javascript
 AliCloudPush.setBadgeNumber(5);
 ```
 **获取桌面图标角标数字** (ios支持，android支持绝大部分手机)
 
 示例:
-```
+```javascript
 AliCloudPush.getBadgeNumber((num)=>{
     console.log("ApplicationIconBadgeNumber:" + num);
 });
@@ -222,13 +222,13 @@ AliCloudPush.getBadgeNumber((num)=>{
 - num角标数字
 
 示例:
-```
+```javascript
 AliCloudPush.syncBadgeNumer(5);
 ```
 **获取用户是否开启通知设定** (ios 10.0+支持)
 
 示例:
-```
+```javascript
 AliCloudPush.getAuthorizationStatus((result)=>{
     console.log("AuthorizationStatus:" + result);
 });
@@ -241,19 +241,20 @@ app在未启动时收到通知后，点击通知启动app,
 并提供getInitalMessage方法可以获取，在app的JS逻辑完成后可以继续处理该消息
 
 示例:
-```
+```javascript
 // 处理收到的推送
 handleAliCloudPushMessage = React.useCallback((e) => {
-    .....
+    ...
 }, [])
 
 React.useEffect(() => {
 		// 监听推送事件
     AliCloudPush.addListener(handleAliCloudPushMessage);
-    const msg = await AliCloudPush.getInitialMessage();
-    if(msg){
-        handleAliCloudPushMessage(msg);
-    }
+    AliCloudPush.getInitialMessage().then((msg) => {
+        if(msg){
+            handleAliCloudPushMessage(msg);
+        }
+    });
     return () => {
     	// 移除推送监听事件
     	AliCloudPush.removeListener(handleAliCloudPushMessage);
