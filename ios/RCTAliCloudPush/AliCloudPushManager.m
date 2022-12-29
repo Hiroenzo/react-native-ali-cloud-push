@@ -297,7 +297,7 @@ RCT_EXPORT_METHOD(getAuthorizationStatus:(RCTResponseSenderBlock)callback) {
  * @param launchOptions app launch Options
  * @param createNotificationCategoryHandler callback for create user's customized notification category
  */
-- (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret lauchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler {
+- (void)setParams:(NSString *)appKey appSecret:(NSString *)appSecret launchOptions:(NSDictionary *)launchOptions createNotificationCategoryHandler:(void (^)(void))createNotificationCategoryHandler {
 
     // APNs注册，获取deviceToken并上报
     [self registerAPNs];
