@@ -74,7 +74,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
     public void setBadgeNumber(int badgeNumber, final Promise promise) {
         // 小米特殊处理
         if (MIUIUtils.isMIUI(getReactApplicationContext())) {
-            FLog.d(ReactConstants.TAG, "setApplicationIconBadgeNumber for xiaomi");
+            FLog.d(ReactConstants.TAG, "setBadgeNumber for xiaomi");
             if (badgeNumber==0) {
                 promise.resolve("");
                 return;
@@ -87,7 +87,7 @@ public class AliCloudPushModule extends ReactContextBaseJavaModule implements Li
                 promise.reject(e.getMessage());
             }
         } else {
-            FLog.d(ReactConstants.TAG, "setApplicationIconBadgeNumber for normal");
+            FLog.d(ReactConstants.TAG, "setBadgeNumber for normal");
             try {
                 ShortcutBadger.applyCount(this.context, badgeNumber);
                 this.badgeNumber = badgeNumber;

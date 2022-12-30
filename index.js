@@ -50,7 +50,7 @@ export default class AliCloudPush {
                     if (extras.badge) {
                         let badgeNumber = parseInt(extras.badge);
                         if (!isNaN(badgeNumber)) {
-                            AliyunPush.setApplicationIconBadgeNumber(badgeNumber);
+                            AliCloudPush.setBadgeNumber(badgeNumber);
                         }
                     }
                     e.extras = extras;
@@ -61,14 +61,14 @@ export default class AliCloudPush {
         });
     }
 
-    static getApplicationIconBadgeNumber = (callback) => {
-        AliCloudPushNative.getApplicationIconBadgeNumber(function(args) {
+    static getBadgeNumber = (callback) => {
+        AliCloudPushNative.getBadgeNumber(function(args) {
             callback(args);
         });
     }
 
-    static setApplicationIconBadgeNumber = (num) => {
-        AliCloudPushNative.setApplicationIconBadgeNumber(num);
+    static setBadgeNumber = (num) => {
+        AliCloudPushNative.setBadgeNumber(num);
     }
 
     static syncBadgeNum = (num) => {
@@ -146,7 +146,7 @@ export default class AliCloudPush {
                         if (extras.badge) {
                             let badgeNumber = parseInt(extras.badge);
                             if (!isNaN(badgeNumber)) {
-                                AliCloudPush.setApplicationIconBadgeNumber(badgeNumber);
+                                AliCloudPush.setBadgeNumber(badgeNumber);
                             }
                         }
                         e.extras = extras;
