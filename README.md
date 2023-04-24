@@ -9,7 +9,7 @@
 
 ## SDK版本更新
 
-#### Android SDK已更新至 3.8.0 [Android SDK发布说明](https://help.aliyun.com/document_detail/434659.html)
+#### Android SDK已更新至 3.8.5 [Android SDK发布说明](https://help.aliyun.com/document_detail/434659.html)
 
 #### 目前已完成Android12的匹配升级，升级到阿里云EMAS的SDK 3.7.4版本
 #### 注意EMAS SDK 3.7.4 的Android配置发生了变化，[具体参考](https://github.com/evan0204/react-native-aliyun-emas/issues/1)
